@@ -1,0 +1,1 @@
+web: gunicorn dynamic_form.wsgi

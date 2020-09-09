@@ -1,0 +1,295 @@
+{% extends "home/base.html" %}
+{% block main-content %}
+<style>
+.site-wrapper{
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    padding:5vh 0 2vh 0;
+    /* background-color: lightgoldenrodyellow; */
+    background-color: lightgrey;
+    /* background-color: lightskyblue; */
+    /* background-color: lightsteelblue; */
+}
+.inner{
+    min-width: 300px;
+    max-width: 800px;
+    width: 100%;
+    height: max-content;
+    padding:1rem;
+    background-color: white;
+    margin: 20px;
+
+}
+
+#page-title{
+    font-size: 2rem;
+    font-family:Arial, Helvetica, sans-serif
+}
+
+#page-desc{
+    margin-top: 2px;
+    font-style: italic;
+    opacity: .8;
+    font-size: 17px;
+}
+
+
+.myfieldset{
+    margin: 20px;
+    font-size: 20px;
+    background-color: lightgrey;
+    padding:20px;
+    padding-top: 1rem;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+}
+.myfieldset input{
+    padding: 3px;
+    margin-top: 5px;
+}
+.myfieldset input[type='text'], .myfieldset input[type='email']{
+    border: none;
+    border-bottom: 1px solid #555;
+    width: 90%;
+    background-color: transparent;
+}
+
+.myfieldset input:focus{
+    background-color: white;
+    border-bottom: none;
+}
+
+.myfieldset textarea{
+    width: 90%;
+    height: 120px;
+
+}
+
+fieldset:first-of-type{
+    border: none;
+}
+
+.mylabel{
+    font-size: 17px;
+    margin-top: 0;
+}
+
+.submit-btn{
+    padding: 7px 10px 7px 10px;
+    color: white;
+    background-color: #3ca2c3;
+    border: 1px solid white;
+    font-size: 20px;
+    /* border-radius: 10px; */
+
+}
+.submit-btn:hover{
+    box-shadow: 0 0 2px 2px #666;
+}
+@media (max-width: 1000px){
+ 
+ .inner{
+     padding: 1rem;
+     margin: 20px;
+    }
+ .myfieldset{
+     padding:1rem;
+     margin: .5rem;
+     margin-top: 25px;
+     margin-bottom: 25px;
+    }
+}
+@media (max-width: 700px){
+ 
+ .inner{
+     padding: 6px;
+     margin: 20px;
+ }
+ .myfieldset{
+     padding:1rem;
+     margin: 15px 2px 15px 2px;
+}
+}
+@media (max-width: 420px){
+ 
+        .inner{
+            padding: 10px;
+            margin: 15px;
+        }
+        .myfieldset{
+            padding:10px;
+            margin: 10px 2px 10px 2px;
+            
+    }
+}
+
+
+</style>
+<div class="site-wrapper">
+    <!-- {% if menu %}
+<div class="menu">
+    <a href="">response</a>
+    <a href="">deactivate</a>
+    <a href="">delete</a>
+</div>
+{% endif %} -->
+    <div class="inner">
+        <fieldset>
+            <header id='page-title'></header>
+            <p id="page-desc"></p>
+        </fieldset>
+
+        <div class="messages" style="color: red;font-size: small;font-style: italic;"></div>
+        <div class="formdiv">
+                <form action="" method="post" id="reponse-form">
+                    {% csrf_token %}
+                    <div class="form_container">            
+                        <div class="none"></div>
+                    </div>
+                    
+                    <div class="submitbutton" style="display: flex;align-content: flex-end;justify-content: flex-end;margin-top: 2rem;">
+                        <button type="button" class="submit-btn" onclick="submitform()">Submit</button>
+                    </div>
+            
+                </form>
+        </div>
+
+    </div>
+
+
+</div>
+    
+{% endblock main-content %}
+
+
+{% block script-content %}
+<script>
+        var json_data = `{{ form }}`;
+        json_data = json_data.replace(/&#x27;/g, '"');
+        var data = JSON.parse(json_data);
+        
+
+        var title = data["header"][0];
+        var desc = data["header"][1];
+    
+
+        $('#page-title').html(title);
+        $('#page-desc').html(desc);
+
+        var fields = data["field"]
+
+        for(var i = 0; i < fields.length; i++){
+            var type = fields[i][0];
+            var question = fields[i][1];
+            var answer = "";
+
+            if(type == 'text'){
+                answer = `<input type="${type}" name="ans${i}" id="ans${i}" class="answer" required maxlength=100>`;
+            }
+            else if(type == 'email'){
+                answer = `<input type="${type}" name="ans${i}" id="ans${i}" class="answer" required maxlength=100>`;  
+            }
+            else if(type == 'textarea'){
+                answer = `<textarea id="ans${i}" name="ans${i}" class="answer" required maxlength=500></textarea>`;
+            }
+            else if(type == 'option'){
+                var temparr = fields[i][2];
+                for(var j = 0; j < temparr.length; j++){
+                    answer += `<input type="radio"  name="opt${i}" value="${temparr[j]}" class="optanswer" required>` + `&nbsp;<span>${temparr[j]}</span><br>` ;
+                }
+                
+            }
+            else if(type == 'checkbox'){
+                var temparr = fields[i][2];
+                for(var j = 0; j < temparr.length; j++){
+                    answer += `<input type="checkbox"  name="chk${i}" value="${temparr[j]}"  class="optanswer">` + `&nbsp;<span>${temparr[j]}</span><br>` ;
+                }
+                
+            }
+            else if(type == 'date'){
+                answer = `<input type="date" name="ans${i}" id="ans${i}"  class="answer" required>`;
+            }
+            else if(type == 'time'){
+                answer = `<input type="time" name="ans${i}" id="ans${i}"  class="answer" required>`;
+            }
+
+            var raw_html = `<fieldset class="myfieldset" name="${type}">
+                <label class="mylabel"> ${question} </label><br>
+                ${answer}
+            </fieldset>`;
+
+            $(raw_html).insertBefore(".none");
+        }
+
+        
+
+        function submitform(){
+           
+
+            var obj = "{}";
+            obj = JSON.parse(obj);
+            obj['formid'] = '{{ id }}';
+            obj["field"] = [];
+            var fields = $('.myfieldset');
+       
+            for(var i = 0; i < fields.length; i++){
+                var question = $.trim($($(fields[i]).children('.mylabel')[0]).text());
+                var type = fields[i].name;
+                var answer = []
+                $($(fields[i]).children('.answer')[0]).css('border-bottom-color','black');
+                $('.messages').html(' ');
+
+       
+                if(type == 'option'){
+                    answer.push($(`input[name="opt${i}"]:checked`).val());
+                }
+                else if(type == 'checkbox'){
+                    $(`input[name="chk${i}"]:checked`).each(function() {
+                            answer.push($(this).val());
+                        });
+                }
+                else{
+                    var t = $.trim($($(fields[i]).children('.answer')[0]).val());
+                    if(t == ""){
+                        $('.messages').html('Fields cannot be empty!');
+                        $($(fields[i]).children('.answer')[0]).css('border-bottom-color','red');
+                        return;
+                    }
+                    answer.push(t);
+                }
+               
+   
+                obj['field'].push([type, question, answer]);
+            }
+  
+            $.ajax({
+            type: 'POST',
+            url: '{% url "web-form-response" id %}',
+            data: {
+                'main_data' : JSON.stringify(obj),
+                'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
+                'action' : "post",
+            },
+  
+            success: function (data) {
+                if (data.done == 1) {
+                    window.location.replace('{% url "web-thankyou" id %}');
+                }
+                else{
+                    alert("Something Went Wrong");
+                }
+            },
+            error: function (err,xhg,wgc){
+                alert('Something Went Wrong, Try Again!');
+                    window.location.replace('{% url "web-thankyou" id %}');
+
+            }
+      
+        });
+
+        }
+    </script>
+{% endblock script-content %}

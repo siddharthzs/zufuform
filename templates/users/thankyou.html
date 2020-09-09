@@ -1,0 +1,93 @@
+{% extends "home/base.html" %}
+{% block main-content %}
+
+<style>
+  
+    .container{
+        display: flex;
+        justify-content: center;
+        padding-top:10vh;
+    
+    }
+    .formdiv{
+        
+        min-width: 270px;
+        padding: 2rem;
+        box-shadow: 0 0 5px 2px #bbb;
+        background-color: white;
+        margin:8px;
+        
+    }
+    .myform{
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+
+    }
+    input{
+        border: none;
+        outline: none;
+        background-color:transparent;
+        border-bottom: 1px solid #999;
+        padding: 5px 10px 5px 10px;
+        color: black;
+    }
+    input:focus{
+        outline: none;
+        background-color: #eee;
+    }
+    input:not(:focus){
+        outline: none;
+        background-color:transparent;
+    }
+
+    button{
+        border: 1px solid transparent;
+        background-color: dodgerblue;
+        padding: 5px 10px;
+        font-size: 16px;
+        color: white;
+    }
+
+    button:hover{
+        background-color: transparent;
+        border: 1px solid dodgerblue;
+        color: dodgerblue;
+
+    }
+    .message{
+        background-color: #ff9800;
+        color: white;
+        padding: 15px 10px;
+    }
+
+    .register-footer{
+        margin-bottom: 0;
+    }
+    @media (max-width: 400px){
+    .formdiv{
+        padding:10px;
+    }
+</style>
+ {% if message %}
+    <div class="message">{{ message }}</div>
+{% endif %}
+    <div class="container">
+        <div class="formdiv">
+            <header style="font-size: 30px;">Thankyou very much!</header>
+            <hr>
+            <div class="myform">
+                Your response has been successfully registered. <br>Feel free to explore our services
+            </div>
+            <center><strong>AND</strong></center>
+        <footer class="register-footer" style="margin-top: 1rem;">
+           
+            <span>We are ZuFu, <strong>ZuFu Forms</strong></span>
+        </footer>
+        </div>
+    </div>
+{% endblock main-content %}

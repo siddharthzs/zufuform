@@ -1,0 +1,97 @@
+{% extends 'home/base.html' %}
+
+{% block main-content %}
+<style>
+    .container{
+        padding: 1px;
+        padding-top: 0;
+        overflow: auto;
+        white-space: nowrap;
+    }
+    
+    table{
+        border-collapse: collapse;
+    }
+    th{
+        background-color: #ccc;
+        color: black;
+    }
+    td{
+        background-color: #ffffe7;
+    }
+    td,th{
+        font-size: 15px;
+        padding: .5rem;
+    }
+</style>
+
+<div class="site-wrapper">
+    <div class="dcsv" style="float: right;width: 100%;background-color:khaki;padding: 5px;">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <!-- <input type="text" id="name" val="downlaodcsv"> -->
+        <button style="width: 200px;float: right;" type="submit"> Download csv</button>
+        </form>
+    </div>
+    <div class="container">
+        <div class="retable">
+            <table border=1>
+                <tr>
+                    {% for re in result|slice:":1" %}
+                            <th>S.No</th>
+                        {% for r in re%}
+                            <th> {{ r.1 }} </th>
+                        {% endfor %}
+                    {% endfor %}
+                   
+                    
+                </tr>
+            
+                {% for re in result %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                    {% for r in re%}
+                      
+                        <td>
+                        {% if  r.0 == 'checkbox' %}
+                            {{ r.2 }}
+                        {% else%}
+                            {{ r.2.0 }}
+                        {% endif %}
+                        </td>
+                    {% endfor %}
+                   
+                    </tr>
+                {% endfor %}
+
+            </table>
+        </div>
+      
+    </div>
+    
+</div>
+
+<script>
+
+</script>
+{% endblock main-content %}
+
+{% block script-content %}
+<script>
+while($('table').width() < $(window).width()){
+    $('.container').css('overflow-x','hidden');
+    $('tr').append("<td>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</td>");
+}
+</script>
+{% endblock script-content %}
+
+
+
+
+
+
+
+
+
+    
+

@@ -1,0 +1,119 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/081bacb86f.js" crossorigin="anonymous"></script> 
+    
+    <title>ZuFu Forms</title>
+    <style>
+      body{
+        margin: 0;
+        padding: 0;
+        background-color: #f0f1f6;
+      }
+      .site-navbar{
+        /* background-color:#395697; */
+        background-color: #3ca2c3;
+        padding: 5px 5px 5px 0;
+        margin: 0;
+        display: flex;
+        justify-content:space-between;
+      }
+      .navbar-brand{
+        font-size: 1.4rem;
+        color: black;
+        text-decoration: none;
+        font-family: 'Nothing You Could Do', cursive;
+      }
+      .site-logo{
+         color:#ff0000;
+         font-size: 2rem;
+         margin-right:1px;
+         font-weight:450;
+         text-rendering: optimizeLegibility;
+         text-combine-upright: digits 2;
+         font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      }
+      .navbar-menu, .navbar-auth{
+        display: flex;
+      }
+      .navbar-menu a{
+        text-decoration: none;
+        align-self: center;
+        vertical-align: middle;
+        padding: 2px;
+        margin: 3px 5px 3px 5px;
+        color: white;
+      }
+      .navbar-menu a:hover{
+        border-bottom:1px solid white;
+  
+      }
+
+      .navbar-auth a{
+        text-decoration: none;
+        margin: 5px;
+        background-color: transparent;
+        border: 1px solid white;
+        color: white;
+        border-radius: 5px;
+        padding:10px 10px 5px 10px;
+
+      }
+      .navbar-auth a:hover{
+        background-color: #cc2222;
+      }
+
+      @media (max-width: 570px) {
+        .site-navbar{
+          flex-direction: row;
+          flex-wrap: wrap;
+        }
+        .navbar-brand{
+          margin-right: 10px;
+        }
+        .navbar-menu{
+          order: 2;
+          display: flex;
+          justify-content: center;
+          width: 100%;
+          background-color: #071e41;
+        }
+        .navbar-auth{
+          order: 1;
+        }
+      }
+    </style>
+
+</head>
+<body>
+<nav class='site-navbar'>
+    <a href="" class="navbar-brand"><span class='site-logo'>&nbsp;ZuFu</span>Forms</a>
+    <div class="navbar-menu">
+      <a href="{%url 'web-home'%}">Home</a>
+      <a href="{%url 'web-viewall'%}">MyForms</a>
+      <a href="{%url 'web-home'%}">MyResponse</a>
+      <a href="https://siddharthzs.github.io">Contact</a>
+    </div>
+    <div class="navbar-auth">
+    {% if user.is_authenticated %}
+      <a href="{%url 'web-logout'%}">Logout</a>
+    {% else %}
+      <a href="{%url 'web-login'%}">Login</a>
+    {% endif %}
+    </div>
+</nav>
+ 
+{% block main-content %}
+
+{% endblock main-content %}
+<!-- Google Font API -->
+<link href="https://fonts.googleapis.com/css?family=Nothing+You+Could+Do&display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+{% block script-content %}
+{% endblock script-content %}
+</body>
+</html>

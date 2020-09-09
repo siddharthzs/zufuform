@@ -1,0 +1,268 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/081bacb86f.js" crossorigin="anonymous"></script> 
+    
+    <title>ZuFu Forms</title>
+    <style>
+      body{
+        margin: 0;
+        padding: 0;
+        background-color: #f0f1f6;
+      }
+      .site-navbar{
+        /* background-color:#395697; */
+        background-color: #3ca2c3;
+        padding: 5px 5px 5px 0;
+        margin: 0;
+        display: flex;
+        justify-content:space-between;
+      }
+      .navbar-brand{
+        font-size: 1.4rem;
+        color: black;
+        text-decoration: none;
+        font-family: 'Nothing You Could Do', cursive;
+      }
+      .site-logo{
+         color:#ff0000;
+         font-size: 2rem;
+         margin-right:1px;
+         font-weight:450;
+         text-rendering: optimizeLegibility;
+         text-combine-upright: digits 2;
+         font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      }
+      .navbar-menu, .navbar-auth{
+        display: flex;
+      }
+      .navbar-menu a{
+        text-decoration: none;
+        align-self: center;
+        vertical-align: middle;
+        padding: 2px;
+        margin: 3px 5px 3px 5px;
+        color: white;
+      }
+      .navbar-menu a:hover{
+        border-bottom:1px solid white;
+  
+      }
+
+      .navbar-auth a{
+        text-decoration: none;
+        margin: 5px;
+        background-color: transparent;
+        border: 1px solid white;
+        color: white;
+        border-radius: 5px;
+        padding:10px 10px 5px 10px;
+
+      }
+      .navbar-auth a:hover{
+        background-color: #cc2222;
+      }
+
+      @media (max-width: 570px) {
+        .site-navbar{
+          flex-direction: row;
+          flex-wrap: wrap;
+        }
+        .navbar-brand{
+          margin-right: 10px;
+        }
+        .navbar-menu{
+          order: 2;
+          display: flex;
+          justify-content: center;
+          width: 100%;
+          background-color: #071e41;
+        }
+        .navbar-auth{
+          order: 1;
+        }
+      }
+    </style>
+
+</head>
+<body>
+<nav class='site-navbar'>
+    <a href="" class="navbar-brand"><span class='site-logo'>&nbsp;ZuFu</span>Forms</a>
+    <div class="navbar-menu">
+      <a href="">Home</a>
+      <a href="">MyForms</a>
+      <a href="">MyResponse</a>
+      <a href="https://siddharthzs.github.io">Contact</a>
+    </div>
+    <div class="navbar-auth">
+    {% if user.is_authenticated %}
+      <a href="{%url 'web-logout'%}">Logout</a>
+    {% else %}
+      <a href="{%url 'web-login'%}">Login</a>
+    {% endif %}
+    </div>
+</nav>
+
+
+    <style>
+    .container{
+        display: flex;
+        justify-content: center;
+        padding-top:10vh;
+    }
+    .formdiv{
+        
+        min-width: 270px;
+        margin:8px;
+        padding: 2rem;
+        box-shadow: 0 0 5px 2px #bbb;
+        background-color: #fff;
+    }
+    .myform{
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+
+    }
+    .myform ul{
+        display: none;
+    }
+    .myform p:nth-child(5){
+        display: none;
+    }
+    input{
+        display: inline;
+        border: none;
+        outline: none;
+        background-color:transparent;
+        border-bottom: 1px solid #999;
+        padding: 5px 10px 5px 10px;
+        color: black;
+        
+    }
+    input:focus{
+        outline: none;
+        background-color: #eee;
+    }
+    input:not(:focus){
+        outline: none;
+        background-color:transparent;
+    }
+
+    fieldset{
+        border: none;
+    }
+    .helptext{
+        margin: 0;
+        padding: 0;
+        font-size: small;
+        display: none;
+    }
+    ul{
+        font-size: small;
+
+    }
+    label{
+        display: inline;
+    }
+        button{
+        border: 1px solid transparent;
+        background-color: dodgerblue;
+        padding: 5px 10px;
+        font-size: 16px;
+        color: white;
+    }
+
+    button:hover{
+        background-color: transparent;
+        border: 1px solid dodgerblue;
+        color: dodgerblue;
+
+    }
+    
+    .alert{
+        display: none;
+    }
+    .alert:first-of-type{
+        display: block;
+    }
+
+    .errorlist{
+        display: none;
+    }
+    
+    
+    @media (max-width: 425px){
+    .container{
+        padding-top: 5vh;
+    }
+    .formdiv{
+        min-width: 320px;
+        padding:25px;
+        margin: 30px;
+        }
+    }
+    @media (max-width: 375px){
+    .formdiv{
+        min-width: 220px;
+        padding:25px;
+        margin: 20px;
+        }
+    }
+    @media (max-width: 320px){
+    .formdiv{
+        min-width: 220px;
+        padding:15px;
+        margin: 15px;
+        }
+    }
+    </style>
+
+    <div class="container">
+        <div class="formdiv">
+            <header style="font-size: 30px;">Register</header>
+            <hr>
+            {% if form.errors %}
+                {% for field in form|slice:":1" %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger">
+                            <i style="color:red">{{ error|escape }}</i>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                
+            {% endif %}
+            <form action="" method="post">
+                <h3>{{ form.error }}</h3>
+            <div class="myform">
+                
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                {% if form.errors %}
+                    {% for error in form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            <i>{{ error|escape }}</i>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            
+      
+                    <div class="submitbutton" style="display: flex;align-content: flex-end;justify-content: flex-end;margin-top: 2rem;">
+                        <button type="submit" class="btn btn-outline-primary">Register</button>
+                    </div>
+            
+            </div>
+        </form>
+
+        </div>
+    </div>
+<!-- Google Font API -->
+<link href="https://fonts.googleapis.com/css?family=Nothing+You+Could+Do&display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+</body>
+</html>

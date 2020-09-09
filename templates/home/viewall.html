@@ -1,0 +1,249 @@
+
+{% extends 'home/base.html' %}
+{% load static %}
+
+
+{% block main-content %}
+<style>
+td a{
+    text-decoration: none;
+}
+
+td a:hover{
+    text-decoration: underline;
+}
+
+
+.created-by-you{
+    margin-bottom: 5vh;
+    overflow: auto;
+  white-space: nowrap;
+}
+
+.created-by-you header, .your-responses header{
+    margin-left: 10px;
+    font-family: 'Courier New', Courier, monospace;
+}
+/*
+.created-by-you div{
+    margin: auto;
+    display: flex;
+    width: 90vw;
+    flex-direction: column;
+}
+.created-by-you div .row{
+    margin:10px;
+    padding: 15px;
+    display: flex;
+    justify-content:space-between;
+    flex-direction: row;
+    max-width: 1200px;
+    align-self: center;
+}
+.created-by-you div .row:not(:nth-child(1)){
+    box-shadow: 1px 1px 4px 3px #ddd;
+    background-color:#fff;
+
+}
+.created-by-you div .row:not(:nth-child(1)):hover{
+    box-shadow: 0px 0px 3px 3px #bbb;
+    background-color: white;
+
+}
+
+.col{
+    max-width: 400px;
+    width: 100%;
+    padding: 2px;
+}
+ */
+
+
+
+table {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 95%;
+  margin:5vh 2vw;
+}
+
+table td, table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+table tr:nth-child(even){background-color: #f2f2f2;}
+
+table tr:hover {background-color: #ddd;}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color:#3ca2c3;
+  color: white;
+}
+
+td input{
+    width: 95%;
+}
+.tdinput{
+    min-width: 200px;
+}
+td{
+    position: relative;
+}
+
+
+td .tooltiptext{
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left:20%;
+
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+td .tooltiptext::after{
+    content: "";
+    position: absolute;
+    top:100%;
+    left: 50%;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+.tooltip:hover + .tooltiptext{
+    visibility: visible;
+    opacity: 1;
+}
+.fa-copy{
+    display: none;
+}
+
+
+@media (max-width: 570px){
+    .newform{
+        margin: 10px;
+    }
+    .newform img{
+        height: 100px;
+        width: 100px;
+    }
+  
+    th:nth-child(2),td:nth-child(2){
+        display: none;
+    }
+    .fa-copy{
+    display: inline;
+    }
+}
+</style>
+<div class="site-wrapper">
+    <div class="otherform">
+            <div class="created-by-you">
+                <header><h2>Your Forms </h2></header>
+                <table>
+                    <tr>
+                     
+                        <th><strong>Form Title</strong></th>
+                        <th><strong>Form URL</strong></th>
+                        <th><strong>Response</strong></th>
+                        <th><strong>Active</strong></th>
+                        <th><strong>Delete</strong></th>
+                    </tr>
+                    {% for form in allforms %}
+                    
+                   
+                    {% if form.active %}
+                        <tr>
+                    {% else %}
+                        <tr style="background-color: red;color:white">
+                    {% endif%}
+                        <td><a href="{% url 'web-detail' form.slug %}" style="color:black;"> {{ form.title }} </a>
+                            <i class="fas fa-copy" style="color:#bbb" onclick="copylink(this)"></i>
+                        </td>
+                        <td class="tdinput">
+                            <input type="text" value="zufuforms.herokuapp.com{% url 'web-detail' form.slug %}" class='tooltip' onclick="copyme(this)" readonly>
+                            <span class="tooltiptext">click to copy</span>
+                      
+                        </td>
+                        <!-- <td><a href="#" class="formlink" style="text-decoration: none;" onclick="copyme(this)"> https://127.0.0.1:8000{% url 'web-detail' form.slug %}</a></td> -->
+                   
+                        <td><a href="{% url 'web-view-response' form.slug %}">view</a></td>           
+                        <td> {{ form.active }} </td>                  
+                        <td><a href="{% url 'web-delete-form' form.slug %}"><i class='fas fa-trash'></i></a></td>
+                    </tr>
+                    {% endfor %}
+                    
+                    <tr>
+                        <td style="background-color:lightgrey">&nbsp;&nbsp;</td>
+                        <td style="background-color:lightgrey">&nbsp;&nbsp;</td>
+                        <td style="background-color:lightgrey">&nbsp;&nbsp;</td> 
+                        <td style="background-color:lightgrey">&nbsp;&nbsp;</td>
+                        <td style="background-color:lightgrey">&nbsp;&nbsp;</td>
+                    </tr>
+               
+                </table>
+
+            </div>
+
+        </div>
+</div>
+{% endblock main-content %}
+
+
+
+{% block script-content %}
+<script>
+    function copyme(me){
+        me.select();
+        me.setSelectionRange(0, 9999);
+        var msg = document.execCommand('copy');
+        //  alert(msg?"sucessful":"unsuccesfull");s
+    
+        var tooltiptext = $(me).next();
+        $(tooltiptext).text("copied");
+
+    }
+    function copylink(ele){
+        var me = $(ele).parent().next().children('input');
+        me = me[0];
+        $(me).parent().css('display','inline');
+        me.select();
+        me.setSelectionRange(0, 9999);
+        var msg = document.execCommand('copy');
+        // alert(msg?"sucessful":"unsuccesfull");
+        $(me).parent().css('display','none');
+        $(ele).css('color','black');
+    }
+
+    $('.fa-copy').mouseleave(function(){
+        $(this).css('color','#bbb');
+
+    })
+
+    $('.tooltip').focusout(function() {
+    var tooltip = $(this).next();
+    $(tooltip).text("click to copy");
+    })
+    
+
+    
+</script>
+{% endblock script-content %}
+
+
+
+
+

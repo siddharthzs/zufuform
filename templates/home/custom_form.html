@@ -1,0 +1,385 @@
+{% extends 'home/base.html' %}
+
+{% block main-content %}
+
+<style>
+    .site-wrapper {
+        display: flex;
+        justify-content: center;
+        padding-top: 70px;
+        width: 100vw;
+  
+
+    }
+
+    .inner {
+        box-shadow: 0 0 2px 5px #ccc;
+        min-width: 200px;
+        max-width: 1000px;
+        padding: 30px;
+        margin: 0 10px 0 10px;
+
+        display: flex;
+        flex-direction: column;
+    }
+
+    fieldset {
+        margin: 20px 0;
+        padding: 20px;
+        box-shadow: 0 0 2px 2px #ccc;
+        border-top: 5px solid rgb(49, 55, 114);
+        border-radius: 5px;
+        position: relative;
+    }
+
+    fieldset:first-of-type{
+        border: none;
+        border-radius: 5px;
+        background-color: #ccc;
+        color: black;
+
+    }
+
+    fieldset .fieldset-title{
+        margin:0;
+        position: absolute;
+        top:1px;
+        right:-5px;
+    }
+    fieldset .fieldset-title span{
+        background-color:#313772;
+        color: white; 
+        padding: 6px;
+    }
+    fieldset .fieldset-title i{
+        color:red;
+        font-size:15px;
+        padding-left: 5px;
+    }
+
+    
+    fieldset input {
+        color: inherit;
+        display: block;
+        background-color: transparent;
+        border: none;
+        margin:20px 0 20px 0;
+        border-bottom: 1px solid black;
+        outline: none;
+        min-width: 100px;
+        width: 95%;
+    }
+    fieldset .question{
+        margin:30px 0 20px 0;
+    }
+    fieldset .answer{
+        margin:15px 0 20px 0;
+    }
+
+    fieldset input:focus{
+        outline:none;
+    }
+
+    #form-email-field{
+        display: inline-block;
+        position: absolute;
+        left: 85px;
+        width: 20px;
+        padding: 0;
+        margin: 0;
+        transform: scale(1.5);
+        overflow-x: hidden;
+    }
+    .form-header div{
+        position:relative;
+        margin:30px 0 50px 0;
+    }
+    
+    .form-header div span{
+        position: absolute;
+        left: 0px;
+        top:-2px;
+    }
+
+    .widgets button{
+        border: 1px solid #20c997;
+        background-color: transparent;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: bold;
+
+    }
+
+    .widgets button:hover{
+        border: 1px solid white;
+        background-color: #20c997;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: bold;
+
+    }
+    #form-submit-field{
+        border: 1px solid transparent;
+        background-color: #17a2b8;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        margin: 10px 15px;
+        color: white;
+        box-shadow: 0 0 2px 1px #ccc;
+
+    }
+
+    #form-submit-field:hover{
+        border: 1px solid #17a2b8;
+        background-color: white;
+        color: #17a2b8;
+    }
+
+
+    fieldset .answer{
+        display: inline-flex;
+        width: 55%;
+    }
+
+
+    
+    @media screen and (max-width: 425px){
+        .inner{
+            padding: 10px;
+        }
+        fieldset{
+            padding:5px;
+        }
+    }
+    @media screen and (max-width: 500px){
+        .inner{
+            padding: 20px;
+        }
+        fieldset{
+            padding:5px;
+        }
+    }
+
+</style>
+
+
+<div class="site-wrapper">
+    <form action="" method="post" id="custom-form">
+        {% csrf_token %}
+        <div class="inner">
+            <fieldset class='form-header'>
+                    <input type="text" name="title" id="form-title-field" placeholder="Untitled form" required>
+                    <input type="text" name="description" id="form-description-field" placeholder="Form description" required>
+
+                    <div><input type="checkbox" name="email" id="form-email-field"><span>Email required</span></div>
+            </fieldset>
+
+            <fieldset class="widgets">
+                <button type="button" class="add-widget" id="short-answer" onclick="short_text()">Short Text</button>
+                <button type="button" class="add-widget" id="aragraph" onclick="long_text()">Long Text</button>
+                <button type="button" class="add-widget" id="multiple" onclick="add_option()">Options</button>
+                <button type="button" class="add-widget" id="checkboxes" onclick="add_checkbox()">Checkboxes</button>
+                <button type="button" class="add-widget" id="date" onclick="add_date()">Date</button>
+                <button type="button" class="add-widget" id="time" onclick="add_time()">Time</button>
+                <!-- <button type="button" class="add-widget" id="file-upload" onclick="add_file()">File upload</button> -->
+            </fieldset>
+
+
+            <button type="button" id="form-submit-field" onclick="publish_form()">Publish</button>
+         
+        </div>
+
+    </form>
+
+</div>
+
+
+<script>
+    function short_text() {
+        var raw_html = `<fieldset class='custom_fieldset' name='text'>
+            <div class="fieldset-title"> <span> Short Text</span><i class='message'></i> </div>
+            <input type='text' class='question'  maxlength=100  placeholder='Your Question?' required>
+            <br>
+            <button type='button' class='deletebox' onclick='$(this).parent().remove();' style="float:right"><i class="far fa-trash-alt"></i></button>
+        </fieldset>`;
+
+        $(raw_html).insertBefore(".widgets");
+    }
+
+    function long_text() {
+           var raw_html = `<fieldset class='custom_fieldset' name='textarea'>
+            <div class="fieldset-title"> <span>Long Text </span><i class='message'></i> </div>
+            <input type='text' class='question'  maxlength=100  placeholder='Your Question?' required>
+            <br>
+            <button type='button' class='deletebox' onclick='$(this).parent().remove();' style="float:right"><i class="far fa-trash-alt"></i></button>
+        </fieldset>`;
+        
+        $(raw_html).insertBefore(".widgets");
+    }
+
+    function add_option() {
+        var raw_html = `<fieldset class='custom_fieldset' name='option'>
+            <div class="fieldset-title"><span> Option Field</span><i class='message'></i>  </div>
+            <input type='text' class='question'  maxlength=100  placeholder='Your Question?' required>
+            <input type='text' class='answer' maxlength=50 placeholder='add option' required><br>
+            <button type='button' onclick='add_multiple_option()' id="mulopt">Add options</button>
+            <br>
+            <button type='button' class='deletebox' onclick='$(this).parent().remove();' style="float:right"><i class="far fa-trash-alt"></i></button>
+
+        </fieldset>`;
+        
+        $(raw_html).insertBefore(".widgets");
+    }
+
+    function add_checkbox() {
+        var raw_html = `<fieldset class='custom_fieldset' name='checkbox'>
+            <div class="fieldset-title"> <span>Checkbox Field</span><i class='message'></i>  </div>
+            <input type='text' class='question'  maxlength=100  placeholder='Your Question?' required>
+            <input type='text' class='answer' maxlength=50 placeholder='add option' required><br>
+            <button type='button' onclick='add_multiple_checkbox()' id="mulchk">Add options</button>
+            <br>
+            <button type='button' class='deletebox' class='deletebox' onclick='$(this).parent().remove();' style="float:right"><i class="far fa-trash-alt"></i></button>
+
+        </fieldset>`;
+
+        $(raw_html).insertBefore(".widgets");
+    }
+
+    function add_date() {
+        var raw_html = `<fieldset class='custom_fieldset' name='date'>
+            <div class="fieldset-title"> <span>Date Input</span><i class='message'></i>  </div>
+            <input type='text' class='question'  maxlength=100  placeholder='Your Question?' required>
+            <br>
+            <button type='button' class='deletebox' onclick='$(this).parent().remove();' style="float:right"s><i class="far fa-trash-alt"></i></button>
+        </fieldset>`;
+        
+        $(raw_html).insertBefore(".widgets");
+    }
+
+    function add_time() {
+        var raw_html = `<fieldset class='custom_fieldset' name='time'>
+            <div class="fieldset-title"> <span>Time Input</span><i class='message'></i>  </div>
+            <input type='text' class='question'  maxlength=100  placeholder='Your Question?' required>
+            <br>
+            <button type='button' class='deletebox' onclick='$(this).parent().remove();' style="float:right"><i class="far fa-trash-alt"></i></button>
+        </fieldset>`;
+
+        $(raw_html).insertBefore(".widgets");
+    }
+
+
+
+    function add_multiple_option() {
+
+        var opt = `<input type='text' class='answer opt' maxlength=50 placeholder='add option' required>&nbsp;&nbsp;
+        <i class="fas fa-minus-circle text-danger" onclick=""></i><br>`;
+
+
+        $(opt).insertBefore("#mulopt");
+    }
+
+    function add_multiple_checkbox() {
+        var opt = `<input type='text' class='answer opt' maxlength=50 placeholder='add option' required>&nbsp;&nbsp;
+        <i class="fas fa-minus-circle text-danger"></i><br>`;
+        $(opt).insertBefore("#mulchk");
+    }
+
+
+
+    function publish_form() {
+        var obj = "{}";
+        obj = JSON.parse(obj);
+        //take title and description
+        var title =$.trim($('#form-title-field').val());
+        var description = $.trim($('#form-description-field').val());
+
+        if(title == ""){
+            alert('title cannot be empty!');
+            return;
+        }
+
+        obj["header"] = [ title,
+                          description,
+                        ];
+
+        obj["field"] = [];
+        
+        if($('#form-email-field').is(':checked')){
+            type = 'email'
+            question = 'Email Address'
+            answer = []
+            obj['field'].push([type,question,answer]);
+        }
+        
+
+        var allfield = $('.custom_fieldset');
+        var flag = 0;
+        for (var i = 0; i < allfield.length; i++) {
+            $(allfield[i]).css("border-top-color","#313772");
+            var type = allfield[i].name;
+            var question = $.trim($(allfield[i]).children('.question').val());
+            var answer = [];
+            
+            if (type == 'option' || type == 'checkbox') {
+                var temp = $(allfield[i]).children('.answer');
+                for (var j = 0; j < temp.length; j++) {
+                    var foo = $.trim($(temp[j]).val());
+                    if(foo == ""){
+                        flag =2;
+                        $(temp[j]).css('border-bottom-color','red');
+                        $(allfield[i]).children('.fieldset-title').children('.message').html('option field is empty!');
+                    }
+                    answer.push(foo);
+                }
+            }
+            if(question == ''){
+                
+                $(allfield[i]).css("border-top-color","red");
+                flag = 2;
+                $(allfield[i]).children('.fieldset-title').children('.message').html('question field is empty!');
+            }
+                
+
+            obj["field"].push([type, question, answer]);
+        }
+        if(flag == 2)
+            return;
+
+
+        $.ajax({
+            type: 'POST',
+            url: '{% url "web-blankform-save" %}',
+            data: {
+                'main_data': JSON.stringify(obj),
+                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                'action': "post",
+            },
+
+            success: function (data) {
+                if (data.done == 1) {
+                    alert(`Your Form is Active || URL: https://zufuforms.herokuapp.com/form/${data.slug}/detail`);
+                    window.location.replace('{% url "web-home" %}');
+                }
+                else {
+                    alert('Try Again, something went Wrong!');
+                }
+            },
+            error: function (xhr, errmsg, err) {
+                alert('Try Again, something went Wrong!');
+            }
+        });
+
+
+
+
+
+
+    }
+
+
+</script>
+
+
+{% endblock main-content %}
