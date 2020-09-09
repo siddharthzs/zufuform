@@ -46,7 +46,7 @@ def blankform_save(request):
             data = json.loads(data)
 
             title = data['header'][0]
-            formtimer = data['formtimer']+3
+            formtimer = data['formtimer']+2
             # save json file now in database0
             b1 = BlankForm(creator=loged_user,data=data,title=title,formtimer=formtimer)
 
