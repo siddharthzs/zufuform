@@ -46,7 +46,7 @@ def blankform_save(request):
             data = json.loads(data)
 
             title = data['header'][0]
-            formtimer = data['formtimer']
+            formtimer = data['formtimer']+3
             # save json file now in database0
             b1 = BlankForm(creator=loged_user,data=data,title=title,formtimer=formtimer)
 
@@ -80,13 +80,13 @@ def form_reponse(request,slug):
         if(form.formtimer > 0):
             cur_log = get_object_or_404(LogTable,formslug=slug,username=loged_user)
             if(datetime.datetime.now(datetime.timezone.utc) > cur_log.inital_time+datetime.timedelta(0,60*form.formtimer)):
-                print("====="*20)
+                # print("====="*20)
                 # print(cur_log.inital_time+datetime.timedelta(0,60*form.formtimer),datetime.datetime.now(datetime.timezone.utc),form.formtimer)
-                print(f"cur: {datetime.datetime.now(datetime.timezone.utc)}, past: {cur_log.inital_time}, limit:{form.formtimer} = limittime:{cur_log.inital_time+datetime.timedelta(0,60*form.formtimer)} ")
+                # print(f"cur: {datetime.datetime.now(datetime.timezone.utc)}, past: {cur_log.inital_time}, limit:{form.formtimer} = limittime:{cur_log.inital_time+datetime.timedelta(0,60*form.formtimer)} ")
 
                 data = {
                     'done': 0,
-                    'message': f"cur: {datetime.datetime.now(datetime.timezone.utc)}, past: {cur_log.inital_time}, limit:{form.formtimer} = limittime:{cur_log.inital_time+datetime.timedelta(0,60*form.formtimer)} "
+                    'message': "Cannot Submit Form, TimeLimit Exceeded!"
                 }
                 return JsonResponse(data)
         # created_by, form_id, question,answer
