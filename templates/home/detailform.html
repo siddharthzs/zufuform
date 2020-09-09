@@ -283,8 +283,9 @@ fieldset:first-of-type{
                     window.location.replace('{% url "web-thankyou" id %}');
                 }
                 else{
-                    alert("You're Form Cannot Be Submmited!!");
-                    window.location.replace('{% url "web-thankyou" id %}');
+                    console.log(data.message);
+                    alert(data.message);
+                    //window.location.replace('{% url "web-thankyou" id %}');
                 }
             },
             error: function (err,xhg,wgc){

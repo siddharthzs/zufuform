@@ -81,8 +81,14 @@ def form_reponse(request,slug):
             cur_log = get_object_or_404(LogTable,formslug=slug,username=loged_user)
             if(datetime.datetime.now(datetime.timezone.utc) > cur_log.inital_time+datetime.timedelta(0,60*form.formtimer)):
                 print("====="*20)
-                print(cur_log.inital_time+datetime.timedelta(0,60*form.formtimer),datetime.datetime.now(datetime.timezone.utc),form.formtimer)
-                return HttpResponse("<h1>You Cannot Submit Form, Time Limit Excedeed!!</h1>")
+                # print(cur_log.inital_time+datetime.timedelta(0,60*form.formtimer),datetime.datetime.now(datetime.timezone.utc),form.formtimer)
+                print(f"cur: {datetime.datetime.now(datetime.timezone.utc)}, past: {cur_log.inital_time}, limit:{form.formtimer} = limittime:{cur_log.inital_time+datetime.timedelta(0,60*form.formtimer)} ")
+
+                data = {
+                    'done': 0,
+                    'message': f"cur: {datetime.datetime.now(datetime.timezone.utc)}, past: {cur_log.inital_time}, limit:{form.formtimer} = limittime:{cur_log.inital_time+datetime.timedelta(0,60*form.formtimer)} "
+                }
+                return JsonResponse(data)
         # created_by, form_id, question,answer
         u1 = UserResponse(formid=form,responder=loged_user,response=data)
         u1.save()
