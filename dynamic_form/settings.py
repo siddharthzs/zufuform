@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'rb)lj3a&%g5290do6v#ac0*n@sn9b9&+3y40)tbq(a-sd3x6-!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['zufuforms.herokuapp.com','*']
 
@@ -126,7 +126,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'templates')]
 LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = 'user/login/'
+LOGIN_URL = '/user/login/'
 
 
 AWS_ACCESS_KEYID = "AKIA6JZP6KUPGWN67UGS"
