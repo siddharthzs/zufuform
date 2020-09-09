@@ -1,13 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
+import datetime
 # Create your models here.
 class BlankForm(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     data = models.TextField()
     title = models.CharField(max_length=100)
     active = models.BooleanField(default=True)
-
+    formtimer = models.IntegerField(default=0)
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
@@ -27,3 +28,9 @@ class UserResponse(models.Model):
 
     response = models.TextField()
     active = models.BooleanField(default=True)
+
+
+class LogTable(models.Model):
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
+    formslug = models.SlugField()
+    inital_time = models.DateTimeField(default=datetime.datetime.now(datetime.timezone.utc))

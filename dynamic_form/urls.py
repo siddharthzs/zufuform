@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 
-from home.views import home, blank_form, blankform_save, view_allform, detailform, form_reponse, viewreponse, thankyou, formremove
+from home.views import home, blank_form, blankform_save, view_allform, detailform, form_reponse, viewreponse, thankyou, formremove, setlogdata
 import users.views as users_views
 
 urlpatterns = [
@@ -30,6 +30,7 @@ urlpatterns = [
     path('form/user/<slug>/response/',form_reponse,name='web-form-response'),
     path('form/<slug>/responses/',viewreponse,name='web-view-response'),
     path('form/<slug>/delete/',formremove,name='web-delete-form'),
+    path('form/laskdjf32948skdjf3/<slug>/initiate/',setlogdata, name='web-set-logtime'),
     path('form/<slug>/responses/thankyou/',thankyou,name='web-thankyou'),
     # Authentication Views
     path('user/register/', users_views.register, name='web-register'),

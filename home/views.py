@@ -3,11 +3,12 @@ from django.template.defaultfilters import slugify
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from .models import BlankForm, UserResponse, LogTable
 from django.contrib import messages
 import json
 import csv
 import mimetypes
-from .models import BlankForm, UserResponse
+import datetime
 
 # Create your views here.
 
@@ -45,10 +46,12 @@ def blankform_save(request):
             data = json.loads(data)
 
             title = data['header'][0]
-      
+            formtimer = data['formtimer']
             # save json file now in database0
-            b1 = BlankForm(creator=loged_user,data=data,title=title)
+            b1 = BlankForm(creator=loged_user,data=data,title=title,formtimer=formtimer)
+
             b1.save()
+
             slug_name = b1.slug
 
             data = {
@@ -66,7 +69,6 @@ def blankform_save(request):
 
 @login_required
 def form_reponse(request,slug):
-
     loged_user = get_object_or_404(User,username=request.user)
     if request.POST.get('action') == 'post':
     
@@ -75,8 +77,12 @@ def form_reponse(request,slug):
         
         # save json file now in database0
         form = get_object_or_404(BlankForm,slug=slug)
-
-        
+        if(form.formtimer > 0):
+            cur_log = get_object_or_404(LogTable,formslug=slug,username=loged_user)
+            if(datetime.datetime.now(datetime.timezone.utc) > cur_log.inital_time+datetime.timedelta(0,60*form.formtimer)):
+                print("====="*20)
+                print(cur_log.inital_time+datetime.timedelta(0,60*form.formtimer),datetime.datetime.now(datetime.timezone.utc),form.formtimer)
+                return HttpResponse("<h1>You Cannot Submit Form, Time Limit Excedeed!!</h1>")
         # created_by, form_id, question,answer
         u1 = UserResponse(formid=form,responder=loged_user,response=data)
         u1.save()
@@ -106,7 +112,6 @@ def detailform(request,slug):
         filemenu = True
     else:
         filemenu = False
-
 
     return render(request,'home/detailform.html',{'form':form.data,'id':slug,'menu': filemenu})
 
@@ -166,6 +171,21 @@ def formremove(request,slug):
     bk_form.delete()
     responses.delete()
     return home(request)
+
+
+
+def setlogdata(request,slug):
+    log_user = get_object_or_404(User,username=request.user)
+    t = LogTable.objects.filter(username=log_user,formslug=slug)
+    if(len(t) > 0):
+        return HttpResponse('Already Present!')
+    else:
+        log = LogTable(username=log_user,formslug=slug)
+        log.save()
+        return HttpResponse('Time Intialised')
+
+
+
 
 def thankyou(request,slug):
     return render(request,'users/thankyou.html')

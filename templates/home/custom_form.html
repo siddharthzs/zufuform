@@ -185,6 +185,9 @@
                 <button type="button" class="add-widget" id="time" onclick="add_time()">Time</button>
                 <!-- <button type="button" class="add-widget" id="file-upload" onclick="add_file()">File upload</button> -->
             </fieldset>
+            <fieldset>
+                Set Timer To Form(in minutes): <input type="number" name="form_timer" id="form_timer" min=1 max=59 placeholder="set 0 to skip">
+            </fieldset>
 
 
             <button type="button" id="form-submit-field" onclick="publish_form()">Publish</button>
@@ -289,17 +292,20 @@
 
 
     function publish_form() {
-        var obj = "{}";
+        let obj = "{}";
         obj = JSON.parse(obj);
         //take title and description
-        var title =$.trim($('#form-title-field').val());
-        var description = $.trim($('#form-description-field').val());
+        let title =$.trim($('#form-title-field').val());
+        let description = $.trim($('#form-description-field').val());
 
         if(title == ""){
             alert('title cannot be empty!');
             return;
         }
-
+        let formtimer = $('#form_timer').val();
+        if(!formtimer)
+            formtimer = 0;
+        obj["formtimer"] = formtimer;
         obj["header"] = [ title,
                           description,
                         ];

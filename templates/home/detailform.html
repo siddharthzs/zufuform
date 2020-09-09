@@ -151,7 +151,7 @@ fieldset:first-of-type{
                     </div>
                     
                     <div class="submitbutton" style="display: flex;align-content: flex-end;justify-content: flex-end;margin-top: 2rem;">
-                        <button type="button" class="submit-btn" onclick="submitform()">Submit</button>
+                        <button type="button" class="submit-btn" onclick="submitform()" id="btncall">Submit</button>
                     </div>
             
                 </form>
@@ -161,6 +161,10 @@ fieldset:first-of-type{
 
 
 </div>
+
+<script>
+
+</script>
     
 {% endblock main-content %}
 
@@ -279,7 +283,8 @@ fieldset:first-of-type{
                     window.location.replace('{% url "web-thankyou" id %}');
                 }
                 else{
-                    alert("Something Went Wrong");
+                    alert("You're Form Cannot Be Submmited!!");
+                    window.location.replace('{% url "web-thankyou" id %}');
                 }
             },
             error: function (err,xhg,wgc){
@@ -291,5 +296,26 @@ fieldset:first-of-type{
         });
 
         }
+
+
+
+
+
+$('#reponse-form').find('input').keypress(function(e){
+    if ( e.which == 13 ) // Enter key = keycode 13
+    {
+      //Use whatever selector necessary to focus the 'next' input
+        $('#btncall').click();
+        return false;
+    }
+});
+
+
+$(document).ready(function(){
+    let url = `{% url "web-set-logtime" id %}`;
+    console.log(url);
+    let foobar = fetch(url);
+    
+})
     </script>
 {% endblock script-content %}
