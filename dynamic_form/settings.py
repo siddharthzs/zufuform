@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'rb)lj3a&%g5290do6v#ac0*n@sn9b9&+3y40)tbq(a-sd3x6-!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['zufuforms.herokuapp.com','*']
 
